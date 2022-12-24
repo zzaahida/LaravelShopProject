@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\Profile\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
@@ -7,11 +9,15 @@ use App\Http\Controllers\Auth2\LoginController;
 use App\Http\Controllers\Adm\UserController;
 use App\Http\Controllers\Adm\RoleController;
 use App\Http\Controllers\Adm\CategoryController;
+use App\Http\Controllers\LangController;
 
 Route::get('/',function (){
     return redirect()->route('products.index');
 
 });
+
+Route::get('lang/{lang}', [LangController::class, 'switchLang'])->name('switch.lang');
+
 Route::middleware('auth')->group(function (){
     Route::resource('products',ProductController::class)->except('index', 'show');
     Route::post('/logout', [\App\Http\Controllers\Auth2\LoginController::class,'logout'])->name('logout');
@@ -20,13 +26,19 @@ Route::middleware('auth')->group(function (){
     Route::get('/products/cart', [ProductController::class, 'cart'])->name('products.cart');
     Route::post('/products/cart', [ProductController::class, 'buy'])->name('products.buy');
     Route::post('/products/{product}/uncart', [ProductController::class, 'uncart'])->name('products.uncart');
+    Route::get('/products/orders', [ProductController::class, 'orders'])->name('products.orders');
+
+    Route::post('/products/{product}/review', [ProductController::class, 'review'])->name('products.review');
+    Route::post('/products/{product}/unreview', [ProductController::class, 'unreview'])->name('products.unreview');
 
     Route::post('/comment',[\App\Http\Controllers\CommentController::class,'store'])->name('comment.store');
     Route::get('/products/edit/{comment}',[\App\Http\Controllers\CommentController::class,'edit'])->name('comment.edit');
     Route::put('/comment/{comment}',[\App\Http\Controllers\CommentController::class,'update'])->name('comment.update');
     Route::delete('/comments/{comment}',[\App\Http\Controllers\CommentController::class,'destroy'])->name('comments.destroy');
 
-
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile/edit/{user}', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/{user}', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::prefix('adm')->as('adm.')->middleware('hasrole:admin')->group(function (){
         Route::get('/users', [UserController::class, 'index'])->name('users.index');
@@ -39,7 +51,7 @@ Route::middleware('auth')->group(function (){
         Route::get('/comments', [\App\Http\Controllers\CommentController::class, 'index'])->name('comments.index');
         Route::delete('/comments/{comment}',[\App\Http\Controllers\CommentController::class,'destroy'])->name('comments.destroy');
     });
-    Route::prefix('adm')->as('adm.')->middleware('hasrole:admin,moderator')->group(function (){
+    Route::prefix('adm')->as('adm.')->middleware('hasrole:moderator')->group(function (){
         Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
         Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
         Route::post('/categories',[CategoryController::class,'store'])->name('categories.store');

@@ -21,15 +21,18 @@ class CategoryController extends Controller
     public function store(Request $request){
         $validated = $request->validate([
             'name' => 'required|max:255' ,
+            'name_en' => 'required|max:255' ,
+            'name_kz' => 'required|max:255' ,
+            'name_ru' => 'required|max:255' ,
             'code' => 'required|max:255' ,
         ]);
         Category::create($validated);
-        return redirect()->route('adm.categories.index');
+        return redirect()->route('adm.categories.index')->with('message', __('messages.catcreated'));
     }
     public function destroy(Category $category)
     {
 
         $category->delete();
-        return redirect()->route('adm.categories.index');
+        return redirect()->route('adm.categories.index')->with('alert', __('messages.catdeleted'));
     }
 }

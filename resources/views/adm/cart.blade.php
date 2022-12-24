@@ -3,21 +3,22 @@
 @section('title','Cart page')
 
 @section('content')
-    <h2>Cart page</h2>
+    <h2>{{ __('messages.car') }}</h2>
 
     <table class="table">
         <thead>
         <tr>
             <th scope="col">###</th>
-            <th scope="col">Title</th>
-            <th scope="col">Name</th>
-            <th scope="col">Size</th>
-            <th scope="col">Number</th>
-            <th scope="col">Status</th>
+            <th scope="col">{{ __('messages.title') }}</th>
+            <th scope="col">{{ __('messages.user') }}</th>
+            <th scope="col">{{ __('messages.size') }}</th>
+            <th scope="col">{{ __('messages.count') }}</th>
+            <th scope="col">{{ __('messages.status') }}</th>
             <th>#</th>
 
         </tr>
         </thead>
+        <tbody>
         @for($i=1; $i <= count($productsSize); $i++)
             <tr>
                 <th scope="row">{{$i}}</th>
@@ -30,11 +31,10 @@
                     <form action="{{route('adm.cart.confirm', $productsSize[$i-1]->id)}}" method="post">
                         @csrf
                         @method('PUT')
-                        <button class="btn btn-outline-success">Confirm order</button>
+                        <button class="btn btn-outline-success">{{ __('messages.confirm') }}</button>
                     </form></td>
             </tr>
         @endfor
-        <a href="{{route('adm.categories.create')}}">Create</a>
         </tbody>
     </table>
 @endsection

@@ -44,7 +44,9 @@ class UserController extends Controller
     {
         $user->update([
             'role_id' => $request->input('role_id'),
+            'account' => $request->input('account'),
         ]);
         return redirect()->route('adm.users.index');
     }
+
 }

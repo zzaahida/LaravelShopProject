@@ -19,7 +19,7 @@ class UserStatusMiddleware
     {
         if (Auth::check() && Auth::user()->is_active == false){
                 Auth::logout();
-                return redirect()->route('login.form')->withErrors( 'You are BANNED, call administrator!');
+                return redirect()->route('login.form');
         }
         return $next($request);
     }

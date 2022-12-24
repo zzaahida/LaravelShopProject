@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -13,7 +14,7 @@ class CartController extends Controller
         $cart->update([
            'status' => 'confirmed'
         ]);
-        return back();
+        return back()->with('message', __('messages.cart_confirm'));
     }
 
     public function car(){

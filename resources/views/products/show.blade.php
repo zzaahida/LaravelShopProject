@@ -4,21 +4,21 @@
 
 @section('content')
     <div class="container">
-        <a class="btn btn-outline-primary" href="{{ route('products.index') }}">Go to index page</a>
+        <a class="btn btn-outline-primary" href="{{ route('products.index') }}">{{ __('messages.index') }}</a>
                 <div class="card" >
                     <div class="card-header">
                         <h5 class="card-title">{{$product->title }}</h5>
-                        <img src="{{asset($product->img)}}" >
+                        <img src="{{asset($product->img)}}" width="150px">
                        </div>
                     <div class="card-body">
                         <p class="card-text">{{$product->content}}</p>
-                        <small class="text-muted">{{$product->price}} tenge </small><hr>
-                        <a href="{{route('products.edit',$product->id)}}" class="btn btn-outline-primary">Edit product</a>
+                        <small class="text-muted">{{$product->price}} {{ __('messages.tenge') }}</small><hr>
+                        <a href="{{route('products.edit',$product->id)}}" class="btn btn-outline-primary">{{ __('messages.edit') }}</a>
                         @auth()
                             <form action="{{route('products.addcart', $product->id)}}" method="post">
                                 @csrf
                                 <div class="form-group">
-                                    <label for="sizeInput">Size</label>
+                                    <label for="sizeInput">{{ __('messages.size') }}</label>
                                     <select class="form-select" name="size">
                                         @foreach ($sizes as $size)
                                             @isset($productsSize->pivot->size)
@@ -35,39 +35,59 @@
                                     </select>
                                 </div><br>
                                 <div class="form">
-                                    <label for="numberInput">Kolichestvo</label>
-                                    <input type="number" name="number" placeholder="1">
+                                    <label for="numberInput">{{ __('messages.count') }}</label>
+                                    <input type="number" name="number" placeholder="0">
                                 </div>
-                                <button type="submit">select</button><br>
+                                <button class="btn btn-outline-secondary">{{ __('messages.save') }}</button><br>
                             </form>
                         @endauth
                     </div>
                     <div class="card-footer">
+                        @auth()
+                            <form action="{{route('products.review', $product->id)}}" method="post">
+                                @csrf
+                                <label for="contentInput" >{{ __('messages.review') }}</label><br>
+                                <select name="review">
+                                    @for($i=0; $i<=5; $i++)
+                                        <option {{$myReview==$i ? 'selected' : ''}} value="{{$i}}">
+                                            {{$i==0 ?  __('messages.no_review')  : $i}}
+                                        </option>
+                                    @endfor
+                                </select>
+                                <button class="btn btn-outline-secondary">{{ __('messages.save') }}</button>
+                            </form>
+                            <form action="{{route('products.unreview', $product->id)}}" method="post">
+                                @csrf
+                                <button class="btn btn-outline-danger">{{ __('messages.review_delete') }}</button>
+                            </form>
+                        @endauth<br>
                         <form action="{{route('comment.store')}}" method="post">
                             @csrf
                             <div class="form-group">
-                                <label for="contentInput" >Comment:</label><br>
+                                <label for="contentInput" >{{ __('messages.comment') }}</label><br>
                                 <textarea class="form-control" id="contentInput" rows="3"  name="content"></textarea>
                                 <input type="hidden" value="{{$product->id}}" name="product_id">
                                 <br>
                                 <div class="form-group mt-3">
-                                    <button  type="submit">Save Comment</button><br>
+                                    <button  class="btn btn-outline-secondary">{{ __('messages.save') }}</button><br>
                                 </div><br>
                             </div>
                         </form>
-                        <h2>Comments:</h2>
+                        <h2>{{ __('messages.comment') }}</h2>
                         @foreach($c as $comment)
                             <p >{{$comment->content}}</p>
                             <small>
-                                {{$comment->created_at}}
+                                {{ __('messages.author') }}:{{$comment->user->name}},  {{$comment->created_at}}
                             </small>
                             <div class="btn-group btn-group" >
-                                <a href="{{route('comment.edit', $comment->id)}}" class="btn btn-outline-primary">Edit comment</a><br>
+                                @can('edit', $comment)
+                                    <a href="{{route('comment.edit', $comment->id)}}" class="btn btn-outline-primary">{{ __('messages.edit') }}</a><br>
+                                @endcan
                                 @can('delete', $comment)
                                 <form action="{{route('comments.destroy',$comment->id)}}" method="post">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-outline-danger">Delete</button>
+                                    <button class="btn btn-outline-danger">{{ __('messages.delete') }}</button>
                                 </form>
                                 @endcan
                             </div>

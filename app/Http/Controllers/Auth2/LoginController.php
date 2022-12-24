@@ -29,7 +29,7 @@ class LoginController extends Controller
             return redirect()->intended('/products');
         }
 
-        return back()->withErrors('Incorrect email or password');
+        return back()->with('message', __('messages.incorrect') );
     }
 
     public function logout(){

@@ -5,22 +5,20 @@ use App\Models\Product;
 use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
     public function index(Request $request){
         return view('adm.comment', ['comment'=>Comment::all()]);
     }
-    public function store(Request $request,Comment $comment){
-        Comment::create([
-
-
-            'content'=>$request->input('content'),
-            'user_id'=>$request->input('user_id'),
-            'product_id'=>$request->input('product_id'),
-
+    public function store(Request $request){
+        $validate = $request->validate([
+            'content'=>'required',
+            'product_id'=>'required|numeric|exists:products,id',
         ]);
-        return redirect()->back();
+        Auth::user()->comments()->create($validate);
+        return redirect()->back()->with('message', __('messages.comment_saved'));
     }
     public function edit(Comment $comment)
     {
@@ -32,13 +30,13 @@ class CommentController extends Controller
         $comment->update([
             'content'=>$request->input('content'),
         ]);
-        return redirect()->route('products.show',$comment->product_id);
+        return redirect()->route('products.show',$comment->product_id)->with('message', __('messages.comment_updated'));
     }
 
     public function destroy(Comment $comment)
     {
         $this->authorize('delete', $comment);
         $comment->delete();
-        return redirect()->route('products.show',$comment->product_id);
+        return back()->with('message', __('messages.comment_deleted'));
     }
 }

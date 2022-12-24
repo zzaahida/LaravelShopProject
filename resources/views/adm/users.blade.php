@@ -3,12 +3,12 @@
 @section('title','Users page')
 
 @section('content')
-    <h2>Users page</h2>
+    <h2>{{ __('messages.user') }}</h2>
 
     <form action="{{route('adm.users.search')}}" method="GET">
         <div class="input-group mb-3">
-            <input type="text" name="search" class="form-control" placeholder="Search" aria-label="Recipient's username" aria-describedby="basic-addon2">
-            <button class="btn btn-primary" type="submit">Search</button>
+            <input type="text" name="search" class="form-control" placeholder="{{ __('messages.search') }}" aria-label="Recipient's username" aria-describedby="basic-addon2">
+            <button class="btn btn-primary" type="submit">{{ __('messages.search') }}</button>
         </div>
     </form>
 
@@ -16,10 +16,9 @@
         <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Name</th>
+            <th scope="col">{{ __('messages.name') }}</th>
             <th scope="col">E-mail</th>
-            <th scope="col">Role</th>
-            <th scope="col">###</th>
+            <th scope="col">{{ __('messages.role') }}</th>
             <th scope="col">###</th>
 
         </tr>
@@ -43,14 +42,13 @@
                             @method('PUT')
                             <button class="btn {{$users[$i]->is_active ? 'btn-outline-danger' : 'btn-outline-success'}}" type="submit">
                                 @if($users[$i]->is_active)
-                                    Ban
+                                    {{ __('messages.ban') }}
                                 @else
-                                    Unban
+                                    {{ __('messages.unban') }}
                                 @endif
                             </button>
                         </form>
                     </td>
-                    <td><a href="{{route('adm.users.edit', $users[$i]->id)}}">Edit</a> </td>
                 </tr>
             @endfor
         </tbody>

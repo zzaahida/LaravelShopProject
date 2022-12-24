@@ -3,14 +3,15 @@
 @section('title','Comments page')
 
 @section('content')
-    <h2>Comments page</h2>
+    <h2>{{ __('messages.comment') }}</h2>
 
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">Comment</th>
-            <th scope="col">User name</th>
-            <th scope="col">Product</th>
+            <th scope="col">{{ __('messages.comment') }}</th>
+            <th scope="col">{{ __('messages.user') }}</th>
+            <th scope="col">{{ __('messages.title') }}</th>
+            <th scope="col">###</th>
             <th scope="col">###</th>
 
         </tr>
@@ -25,7 +26,12 @@
                     <form action="{{route('comments.destroy',$c->id)}}" method="post">
                         @csrf
                         @method('DELETE')
-                        <button class="btn btn-outline-primary">Show comment</button>
+                        <button class="btn btn-outline-danger">{{ __('messages.delete') }}</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="{{route('products.show',$c->product_id)}}" method="get">
+                        <button class="btn btn-outline-primary">{{ __('messages.show') }}</button>
                     </form>
                 </td>
             </tr>

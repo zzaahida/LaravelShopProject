@@ -18,6 +18,8 @@ class User extends Authenticatable
         'password',
         'role_id',
         'is_active',
+        'img',
+        'account'
     ];
 
     protected $hidden = [
@@ -41,6 +43,12 @@ class User extends Authenticatable
             ->wherePivot('status',$status)
             ->withTimestamps()
             ->withPivot('size','status','number');
+    }
+
+    public function productsReview(){
+        return $this->belongsToMany(Product::class, 'review')
+            ->withPivot('review')
+            ->withTimestamps();
     }
     public function comments() {
         return $this->hasMany(Comment::class);

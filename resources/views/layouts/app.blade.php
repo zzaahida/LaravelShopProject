@@ -34,12 +34,12 @@
                 <ul class="navbar-nav me-auto">
                     @isset($categories)
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('products.index')}}">All Products</a>
+                            <a class="nav-link" href="{{route('products.index')}}">{{ __('messages.products') }}</a>
                         </li>
 
                         @foreach($categories as $cat)
                             <li class="nav-item">
-                                <a class="nav-link" href="{{route('products.category',$cat->id)}}">{{$cat->name}}</a>
+                                <a class="nav-link" href="{{route('products.category',$cat->id)}}">{{$cat->{'name_'.app()->getLocale()} }}</a>
                             </li>
                         @endforeach
                     @endisset
@@ -51,43 +51,80 @@
                     @guest
                         @if (Route::has('login.form'))
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login.form') }}">{{ __('Login') }}</a>
+                                <a class="nav-link" href="{{ route('login.form') }}">{{ __('messages.login') }}</a>
                             </li>
                         @endif
 
                         @if (Route::has('register.form'))
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('register.form') }}">{{ __('Register') }}</a>
+                                <a class="nav-link" href="{{ route('register.form') }}">{{ __('messages.register') }}</a>
                             </li>
                         @endif
                     @else
-                        @if(Auth::user()->role->name == "admin" || "moderator")
+                        @if(Auth::user()->role->name == "admin")
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('adm.users.index') }}">{{ Auth::user()->role->name}} {{ __('page') }}</a>
+                            <a class="nav-link" href="{{ route('adm.users.index') }}">{{ __('messages.admin') }} {{ __('messages.page') }}</a>
                         </li>
+                        @elseif(Auth::user()->role->name == "moderator")
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('adm.categories.index') }}">{{ __('messages.moderator') }} {{ __('messages.page') }}</a>
+                            </li>
                         @endif
 
+
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('products.cart') }}">Your cart</a>
+                                <a class="nav-link" href="{{ route('products.cart') }}">{{ __('messages.cart') }}</a>
                             </li>
+
+                            <img src="{{asset(Auth::user()->img)}}" width="45px" style="border-radius: 50%;">
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ Auth::user()->name }}
                             </a>
-
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
+                                    {{ __('messages.logout') }}
                                 </a>
 
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                                <a class="dropdown-item" href="{{ route('profile.index') }}">
+                                    {{ __('messages.profile') }}
+                                </a>
+                                <a class="dropdown-item" href="{{ route('products.orders') }}">
+                                    {{ __('messages.orders') }}
+                                </a>
+
+                                <p class="dropdown-item">{{ __('messages.account') }}: {{Auth::user()->account}} {{ __('messages.tenge') }}</p><hr>
+                            </div>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('profile.index') }}"
+                                   onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                    {{ __('messages.name') }}
+                                </a>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf
                                 </form>
                             </div>
                         </li>
                     @endguest
+                    <li class="nav-item dropdown">
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            {{ config('app.languages')[app()->getLocale()] }}
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            @foreach(config('app.languages') as $ln => $lang)
+                                <a class="dropdown-item" href="{{route('switch.lang', $ln)}}">
+                                    {{$lang}}
+                                </a>
+                            @endforeach
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>

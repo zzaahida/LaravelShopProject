@@ -5,27 +5,27 @@
 @section('content')
     <div class="container" style="flex-direction: row">
         @can('create', App\Models\Product::class)
-            <a class="btn btn-outline-primary" href="{{ route('products.create') }}">Go to create page</a>
+            <a class="btn btn-outline-primary" href="{{ route('products.create') }}">{{ __('messages.create') }}</a>
         @endcan
         <div class="row" >
                 @foreach($products as $oneProduct)
                     <div class="card" style="width: 250px; margin: 15px">
                         <div class="card-header" >
                             <h5 class="card-title">{{$oneProduct->title }}</h5>
-                            <small>author: {{$oneProduct->user->name}}</small>
+                            <small>{{ __('messages.author') }}: {{$oneProduct->user->name}}</small>
                         </div>
                         <div class="card-body" >
-                            <p class="card-text">{{$oneProduct->content}}</p>
+                            <img src="{{asset($oneProduct->img)}}" width="200px">
                             <hr>
-                            <small class="text-muted">{{$oneProduct->price}} tenge </small>
+                            <small class="text-muted">{{$oneProduct->price}} {{ __('messages.tenge') }}</small>
                         </div>
                         <div class="card-footer">
-                                <a href="{{route('products.show',$oneProduct->id)}}" class="btn btn-outline-primary" >Read more</a>
+                                <a href="{{route('products.show',$oneProduct->id)}}" class="btn btn-outline-primary" >{{ __('messages.read') }}</a>
                                 @can('delete', $oneProduct)
                                     <form action="{{route('products.show',$oneProduct->id)}}" method="post" >
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-outline-danger"  type="submit">Delete</button>
+                                        <button class="btn btn-outline-danger"  type="submit">{{ __('messages.delete') }}</button>
                                     </form>
                                 @endcan
                         </div>

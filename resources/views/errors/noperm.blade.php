@@ -3,5 +3,5 @@
 @section('title','No permission page')
 
 @section('content')
-    <h1>NO PERMISSION</h1>
+    <h1>{{__('messages.noperm')}}</h1>
 @endsection

@@ -12,7 +12,7 @@
                     @method('PUT')
 
                     <div class="mb-3">
-                        <label for="roleInput">Role:</label>
+                        <label for="roleInput">{{ __('messages.role') }}:</label>
                         <select class="form-control @error('role_id') is-invalid @enderror" name="role_id" id="roleInput">
                             @foreach($role as $rol)
                                 <option value="{{$rol->id}}">{{$rol->name}}</option>
@@ -20,7 +20,7 @@
 
                         </select>
                     </div>
-                    <button class="btn btn-outline-primary" type="submit">Save</button>
+                    <button class="btn btn-outline-primary" type="submit">{{ __('messages.save') }}</button>
                 </form>
             </div>
         </div>

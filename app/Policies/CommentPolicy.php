@@ -27,12 +27,12 @@ class CommentPolicy
 
     public function update(User $user, Comment $comment)
     {
-        //
+        return ($user->id == $comment->user_id);
     }
 
     public function delete(User $user, Comment $comment)
     {
-        return ($user->id == $comment->user_id) || ($user->role->name != 'user');
+        return ($user->id == $comment->user_id) || ($user->role->name == 'admin');
     }
 
     public function restore(User $user, Comment $comment)

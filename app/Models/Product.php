@@ -9,7 +9,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title','content','price','category_id','user_id'];
+    protected $fillable = ['title','content','price','category_id','user_id','img', 'cost'];
 
     public function category(){
         return $this->belongsTo(Category::class);
@@ -22,11 +22,17 @@ class Product extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
     public function usersSize() {
-        return $this->belongsToMany(Product::class)
+        return $this->belongsToMany(User::class)
             ->withPivot('size','status','number')
             ->withTimestamps();
     }
 
+    public function usersReview(){
+        return $this->belongsToMany(User::class, 'review')
+            ->withPivot('review')
+            ->withTimestamps();
+    }
 }
 

@@ -15,20 +15,18 @@ class RegisterController extends Controller
         return view('auth.register');
     }
     public function register(Request $request){
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6|confirmed'
+            'password' => 'required|min:6|confirmed',
+            'img' => 'required|image|mimes:jpg,png,jpeg,svg,gif|max:2048|dimensions:min_width=100,min_height=100,max_width=2000,max+height=2000'
         ]);
+        $fileName = time().$request->file('img')->getClientOriginalName();
+        $image_path = $request->file('img')->storeAs('users', $fileName, 'public');
+        $validated['img'] = '/storage/'.$image_path;
 
-        $user = User::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password')) ,
-            'role_id' => Role::where('name', 'user')->first()->id,
-        ]);
 
-        Auth::login($user);
+        User::create($validated);
 
         return redirect()->route('products.index');
     }
